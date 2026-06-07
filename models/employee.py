@@ -10,3 +10,4 @@ class Employee:
     #метод для вывода информации о имени сотрудника и его должности
     def __repr__(self):
         return f"Employee({self.name}, {self.position})"
+    

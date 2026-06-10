@@ -16,22 +16,43 @@ class App:
         self.exporter = ExcelExporter()
         self.employees = []
         self.init_gui()
-
-    
+    #добавить смены
+    def add_shift(self):
+        name = self.entry_name.get()
+        position = self.entry_position.get()
+        date = self.entry_date.get()
+        start = self.entry_start.get()
+        end = self.entry_end.get()
+        
+        if not name or not date or not start or not end:
+            return
+        
+        emp = Employee(name, position)
+        shift = Shift(date, start, end)
+        self.scheduler.assign(emp, shift)
+        self.employees.append(emp)
+        
+        self.listbox.insert(tk.END, f"{name} | {date} | {start}-{end}")
+    #метод загрузки файла
     def load_file(self):
         path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx")])
         if path:
             data = self.loader.load(path)
-            print(data)
-
+            self.listbox.delete(0, tk.END)
+            for row in data:
+                self.listbox.insert(tk.END, str(row))
+    #метод сохранения файла
     def export_file(self):
         path = filedialog.asksaveasfilename(defaultextension=".xlsx")
         if path:
             schedule = self.scheduler.get_schedule(self.employees)
             self.exporter.export(schedule, path)
-
+    #метод отмены
     def undo(self):
         self.scheduler.undo_last()
+
+
+    #метод инициализации интерфейса
 
     def init_gui(self):
     # верхняя панель
@@ -53,6 +74,33 @@ class App:
 
         self.listbox = tk.Listbox(self.list_frame, width=40)
         self.listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        self.right_frame = tk.Frame(self.list_frame)
+        self.right_frame.pack(side=tk.LEFT, padx=10, fill=tk.Y)
+
+        tk.Label(self.right_frame, text="Имя сотрудника").pack()
+        self.entry_name = tk.Entry(self.right_frame, width=20)
+        self.entry_name.pack()
+
+        tk.Label(self.right_frame, text="Должность").pack()
+        self.entry_position = tk.Entry(self.right_frame, width=20)
+        self.entry_position.pack()
+
+        tk.Label(self.right_frame, text="Дата смены").pack()
+        self.entry_date = tk.Entry(self.right_frame, width=20)
+        self.entry_date.pack()
+
+        tk.Label(self.right_frame, text="Начало").pack()
+        self.entry_start = tk.Entry(self.right_frame, width=20)
+        self.entry_start.pack()
+
+        tk.Label(self.right_frame, text="Конец").pack()
+        self.entry_end = tk.Entry(self.right_frame, width=20)
+        self.entry_end.pack()
+
+        self.btn_add = tk.Button(self.right_frame, text="Добавить смену", command=self.add_shift)
+        self.btn_add.pack(pady=5)
+
 
     def run(self):
         self.root.mainloop()

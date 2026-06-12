@@ -33,6 +33,7 @@ class App:
         self.employees.append(emp)
         
         self.listbox.insert(tk.END, f"{name} | {date} | {start}-{end}")
+        self.update_status()
     #метод загрузки файла
     def load_file(self):
         path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx")])
@@ -47,9 +48,18 @@ class App:
         if path:
             schedule = self.scheduler.get_schedule(self.employees)
             self.exporter.export(schedule, path)
+            self.update_status()
     #метод отмены
     def undo(self):
         self.scheduler.undo_last()
+        if self.employees:
+            self.employees.pop()
+            self.listbox.delete(tk.END)
+        self.update_status()
+
+    def update_status(self):
+        total_shifts = sum(len(emp.shifts) for emp in self.employees)
+        self.status_bar.config(text=f"Сотрудников: {len(self.employees)} | Смен: {total_shifts}")
 
 
     #метод инициализации интерфейса
@@ -100,6 +110,9 @@ class App:
 
         self.btn_add = tk.Button(self.right_frame, text="Добавить смену", command=self.add_shift)
         self.btn_add.pack(pady=5)
+        #cтатус бар внизу, чтобы показывало сколько сотрудников и смен
+        self.status_bar = tk.Label(self.root, text="Сотрудников: 0 | Смен: 0", bd=1, relief=tk.SUNKEN, anchor=tk.W)
+        self.status_bar.pack(side=tk.BOTTOM, fill=tk.X)
 
 
     def run(self):

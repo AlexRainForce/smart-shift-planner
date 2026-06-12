@@ -1,8 +1,10 @@
 from core.command import AssignShiftCommand
+from core.iterators import ActiveEmployeeIterator
 # Планировщик смен. Паттерн Command - каждое назначение можно откатить через undo_last
 class Scheduler:
     def __init__(self):
         self.history = [] #история смен
+                       #итератор
     
     def assign(self, employee, shift):
         cmd = AssignShiftCommand(employee, shift) #создание объекта класса который принмает два объекта = СОТРУДНИК и СМЕНА
@@ -16,7 +18,7 @@ class Scheduler:
     
     def get_schedule(self, employees):  #вызывается в main что бы получаить готовый массив расписания
         result = []                     
-        for emp in employees:           #перебор сотрудников
+        for emp in ActiveEmployeeIterator(employees):          #перебор сотрудников
             for shift in emp.shifts:    #и для каждого сотрудника перебираеются смены дата начало смены и ее состояние
                 result.append({
                     "employee": emp.name,
@@ -25,4 +27,7 @@ class Scheduler:
                     "end": shift.end,
                     "state": shift.state.value
                 })
+
+
         return result #метод возвращает свормированный список
+

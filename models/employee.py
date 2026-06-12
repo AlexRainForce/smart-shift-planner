@@ -4,6 +4,7 @@ class Employee:
         self.name = name #имя для сотрудника
         self.position = position #его нынешнаяя должность
         self.shifts = [] #массив отвечающий за смены сотрудника
+        self.active = True 
     #метод для добавления смены
     def add_shift(self, shift):
         self.shifts.append(shift)

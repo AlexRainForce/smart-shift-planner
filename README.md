@@ -7,9 +7,12 @@ Desktop app for employee shift planning built with Python.
 
 ## Features
 - Load historical data from Excel
-- Plan and assign shifts to employees
-- Confirm or cancel shifts
+- Add employees and shifts manually
+- Confirm shifts with color indicators (gray / green / red)
+- Search employees by name
+- Undo last action
 - Export schedule to Excel
+- Status bar showing total employees and shifts
 
 ## Architecture
 - **Command** pattern — every action can be undone

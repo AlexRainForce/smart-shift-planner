@@ -84,13 +84,27 @@ class App:
         total_shifts = sum(len(emp.shifts) for emp in self.employees)
         self.status_bar.config(text=f"Сотрудников: {len(self.employees)} | Смен: {total_shifts}")
 
+    # применить
+
+    def confirm(self):
+        selected = self.listbox.curselection()
+        if not selected:
+            return
+        idx = selected[0]
+        color = self.get_shift_color("подтверждена")
+        self.listbox.itemconfig(idx, fg=color)
+
 
     # метод инициализации интерфейса
 
     def init_gui(self):
-    # верхняя панель
+
+        # верхняя панель
+
         self.top_frame = tk.Frame(self.root)
         self.top_frame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+
+        # кнопки
 
         self.btn_load = tk.Button(self.top_frame, text="Загрузить файл", command=self.load_file)
         self.btn_load.pack(side=tk.LEFT)
@@ -100,6 +114,9 @@ class App:
 
         self.btn_undo = tk.Button(self.top_frame, text="Отменить", command=self.undo)
         self.btn_undo.pack(side=tk.LEFT)
+
+        self.btn_confirm = tk.Button(self.top_frame, text="Применить", command=self.confirm)
+        self.btn_confirm.pack(side=tk.LEFT)
 
         # список сотрудников
         self.list_frame = tk.Frame(self.root)
@@ -138,7 +155,9 @@ class App:
 
         self.btn_add = tk.Button(self.right_frame, text="Добавить смену", command=self.add_shift)
         self.btn_add.pack(pady=5)
+
         # cтатус бар внизу, чтобы показывало сколько сотрудников и смен
+
         self.status_bar = tk.Label(self.root, text="Сотрудников: 0 | Смен: 0", bd=1, relief=tk.SUNKEN, anchor=tk.W)
         self.status_bar.pack(side=tk.BOTTOM, fill=tk.X)
 

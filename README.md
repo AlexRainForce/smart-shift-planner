@@ -1,4 +1,5 @@
 # smart-shift-planner
+![Smart Shift Planner](assets/banner.png)
 Python desktop app for employee shift planning. Uses Command, Strategy and State design patterns. Built with openpyxl.
 # Smart Shift Planner
 

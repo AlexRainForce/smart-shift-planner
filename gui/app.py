@@ -15,6 +15,7 @@ class App:
         self.loader = ExcelLoader()
         self.exporter = ExcelExporter()
         self.employees = []
+        self.shift_map = {}  # вот сюда
         self.init_gui()
 
     def get_shift_color(self, state):
@@ -56,7 +57,7 @@ class App:
         idx = self.listbox.size() - 1
         color = self.get_shift_color("запланирована")
         self.listbox.itemconfig(idx, fg=color)
-        self.update_status()
+        self.shift_map[idx] = shift
     # метод загрузки файла
     def load_file(self):
         path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx")])
@@ -83,6 +84,7 @@ class App:
     def update_status(self):
         total_shifts = sum(len(emp.shifts) for emp in self.employees)
         self.status_bar.config(text=f"Сотрудников: {len(self.employees)} | Смен: {total_shifts}")
+        
 
     # применить
 
@@ -91,8 +93,10 @@ class App:
         if not selected:
             return
         idx = selected[0]
-        color = self.get_shift_color("подтверждена")
-        self.listbox.itemconfig(idx, fg=color)
+        if idx in self.shift_map:
+            self.shift_map[idx].confirm()
+            color = self.get_shift_color("подтверждена")
+            self.listbox.itemconfig(idx, fg=color)
 
 
     # метод инициализации интерфейса
